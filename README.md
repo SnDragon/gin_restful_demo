@@ -1,9 +1,31 @@
-## gin+gorm restful demo
-### 创建表结构
+# gin+gorm restful demo
+## 目录结构
+```
+.
+├── README.md
+├── api                     // 对外的API接口(controller)
+│   ├── error_code.go
+│   └── user.go
+├── dao                     // 数据库操作
+│   ├── db.go
+│   └── user.go
+├── go.mod
+├── go.sum
+├── main.go                 // 主程序
+├── migrate.go              // 迁移工具(自动创建表）
+├── model                   // 模型
+│   └── user.go
+└── utils                   // 工具包
+    └── utils.go
+
+```
+## 修改数据库配置
+修改`dao/db.go`的`connection`变量
+## 创建表结构
 ```
 go run migrate.go
 ```
-### 运行项目
+## 运行项目
 ```
 go run main.go
 ```
