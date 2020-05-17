@@ -5,6 +5,11 @@ import (
 	"strconv"
 )
 
+type Paginator struct {
+	Page int `form:"page" binding:"numeric,gt=0"`
+	Limit int `form:"limit" binding:"numeric,gt=0"`
+}
+
 func GetInt(param interface{}) (int, error) {
 	switch v := param.(type) {
 	case int:

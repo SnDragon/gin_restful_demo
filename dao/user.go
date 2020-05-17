@@ -64,7 +64,7 @@ func GetUsers(page, limit int) (total int, users []model.User) {
 	// 分页
 	if total > 0 {
 		offset := (page - 1) * limit
-		db.Offset(offset).Take(limit).Find(&users)
+		db.Offset(offset).Limit(limit).Find(&users)
 	}
 	return
 }

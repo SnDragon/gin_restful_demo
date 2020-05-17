@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/SnDragon/gin_restful_demo/dao"
 	"github.com/SnDragon/gin_restful_demo/model"
 	"github.com/SnDragon/gin_restful_demo/utils"
@@ -29,14 +30,14 @@ func CreateUser(c *gin.Context) {
 // 更新用户
 func UpdateUser(c *gin.Context) {
 	var status = http.StatusOK
-	var code int
-	var msg string
+	var code = SUCCESS
+	var msg = "success"
 	var data *model.User
 	user := model.User{}
 	if err := c.ShouldBindJSON(&user); err != nil {
 		status, code, msg = http.StatusBadRequest, ERROR, err.Error()
 	} else {
-		id,err := utils.GetInt(c.Param("id"))
+		id, err := utils.GetInt(c.Param("id"))
 		if err == nil {
 			data = dao.UpdateUserById(id, &user)
 		}
@@ -69,7 +70,7 @@ func GetUser(c *gin.Context) {
 	var code = SUCCESS
 	var msg = "success"
 	var data *model.User
-	id,err := utils.GetInt(c.Param("id"))
+	id, err := utils.GetInt(c.Param("id"))
 	if err == nil {
 		data = dao.GetUserById(id)
 	}
@@ -85,14 +86,20 @@ func GetUser(c *gin.Context) {
 
 // 获取用户列表
 func GetUsers(c *gin.Context) {
-	page, err1 := utils.GetInt(c.DefaultQuery("page", "1"))
-	limit, err2 := utils.GetInt(c.DefaultQuery("limit", "10"))
-
-	if err1 != nil || err2 != nil {
-		c.JSON(http.StatusOK, gin.H{"code": ERROR, "msg": "param error"})
+	//page, err1 := utils.GetInt(c.DefaultQuery("page", "1"))
+	//limit, err2 := utils.GetInt(c.DefaultQuery("limit", "10"))
+	//
+	//if err1 != nil || err2 != nil {
+	//	c.JSON(http.StatusOK, gin.H{"code": ERROR, "msg": "param error"})
+	//	return
+	//}
+	var paginator = utils.Paginator{Page: 1, Limit: 10}
+	if err := c.ShouldBindQuery(&paginator); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	total, users := dao.GetUsers(page, limit)
+	fmt.Println(paginator)
+	total, users := dao.GetUsers(paginator.Page, paginator.Limit)
 	c.JSON(http.StatusOK, gin.H{
 		"code": SUCCESS,
 		"msg":  "success",

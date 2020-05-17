@@ -10,4 +10,3 @@ func main() {
 	db := dao.NewDB()
 	db.AutoMigrate(&model.User{})
 }
-
